@@ -7,7 +7,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"mime/multipart"
 	"net/http"
 	"net/http/cookiejar"
@@ -189,7 +188,7 @@ func (resp *Response) Content() []byte {
 		}
 		Body = reader
 	}
-	resp.content, err = ioutil.ReadAll(Body)
+	resp.content, err = io.ReadAll(Body)
 	if err != nil {
 		return nil
 	}
@@ -248,7 +247,7 @@ func (req *Request) PostJson(origurl string, args ...interface{}) (resp *Respons
 				req.Header.Set(k, v)
 			}
 		case string:
-			req.setBodyRawBytes(ioutil.NopCloser(strings.NewReader(arg.(string))))
+			req.setBodyRawBytes(io.NopCloser(strings.NewReader(arg.(string))))
 		case Auth:
 			req.httpreq.SetBasicAuth(a[0], a[1])
 		default:
@@ -257,7 +256,7 @@ func (req *Request) PostJson(origurl string, args ...interface{}) (resp *Respons
 			if err != nil {
 				return nil, err
 			}
-			req.setBodyRawBytes(ioutil.NopCloser(b))
+			req.setBodyRawBytes(io.NopCloser(b))
 		}
 	}
 	URL, err := url.Parse(origurl)
@@ -338,7 +337,7 @@ func (req *Request) Post(origurl string, args ...interface{}) (resp *Response, e
 }
 func (req *Request) setBodyBytes(Forms url.Values) {
 	data := Forms.Encode()
-	req.httpreq.Body = ioutil.NopCloser(strings.NewReader(data))
+	req.httpreq.Body = io.NopCloser(strings.NewReader(data))
 	req.httpreq.ContentLength = int64(len(data))
 }
 func (req *Request) setBodyRawBytes(read io.ReadCloser) {
@@ -367,7 +366,7 @@ func (req *Request) buildFilesAndForms(files []map[string]string, datas []map[st
 		}
 	}
 	w.Close()
-	req.httpreq.Body = ioutil.NopCloser(bytes.NewReader(b.Bytes()))
+	req.httpreq.Body = io.NopCloser(bytes.NewReader(b.Bytes()))
 	req.httpreq.ContentLength = int64(b.Len())
 	req.Header.Set("Content-Type", w.FormDataContentType())
 }

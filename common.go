@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
+	"os"
 	"strconv"
 )
 
@@ -14,7 +14,7 @@ func Input(str string) string {
 }
 
 func Read(path string) []byte {
-	data, err := ioutil.ReadFile(path)
+	data, err := os.ReadFile(path)
 	if err != nil {
 		return nil
 	}
@@ -22,7 +22,7 @@ func Read(path string) []byte {
 }
 
 func Write(path, data string) {
-	err := ioutil.WriteFile(path, []byte(data), 0777)
+	err := os.WriteFile(path, []byte(data), 0777)
 	if err != nil {
 		panic(err)
 	}
