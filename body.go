@@ -311,11 +311,16 @@ func startData(applicationId string, accountToken string, HpidUserId string) *ba
 		"Overcooked2",
 		"Overcooked All You Can Eat",
 	}
-	// todo: get location from bilibili api.
-	// https://api.bilibili.com/x/web-interface/zone
+	latitude := 30.5832367
+	longitude := 103.982384
+	res, _ := Requests().Get("https://api.bilibili.com/x/web-interface/zone")
+	var zoneRet map[string]interface{}
+	res.Json(&zoneRet)
+	latitude = zoneRet["data"].(map[string]float64)["latitude"]
+	longitude = zoneRet["data"].(map[string]float64)["longitude"]
 	uParams["location"] = map[string]float64{
-		"latitude":  30.5832367,
-		"longitude": 103.982384,
+		"latitude":  latitude,
+		"longitude": longitude,
 	}
 	return base
 }
