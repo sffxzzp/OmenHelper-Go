@@ -45,8 +45,13 @@ type (
 	challengeListRetResult struct {
 		Collection []challengeListRetCollection `json:"collection"`
 	}
+	challengeListRetError struct {
+		Code    int    `json:"code"`
+		Message string `json:"message"`
+	}
 	challengeListRet struct {
 		Result challengeListRetResult `json:"result"`
+		Error  challengeListRetError  `json:"error"`
 	}
 	progressRetResult struct {
 		ProgressPercentage int `json:"progressPercentage"`
@@ -56,16 +61,19 @@ type (
 	}
 )
 
-func (c *client) newClient(localhostUrl string) *client {
+func (c *client) newClient() *client {
 	Web := Requests()
 	Web.Client.Timeout = 30 * time.Second
 	return &client{
 		RPCUrl:        "https://rpc-prod.versussystems.com/rpc",
 		ApplicationId: "6589915c-6aa7-4f1b-9ef5-32fa2220c844",
 		ClientId:      "130d43f1-bb22-4a9c-ba48-d5743e84d113",
-		LocalhostUrl:  localhostUrl,
 		Web:           Web,
 	}
+}
+
+func (c *client) setLocalUrl(localhostUrl string) {
+	c.LocalhostUrl = localhostUrl
 }
 
 func (c *client) getFastList(challengeList []map[string]string) []map[string]string {
@@ -138,7 +146,7 @@ func (c *client) getCurCList() []map[string]string {
 			challengeList = append(challengeList, map[string]string{
 				"eventName": item.RelevantEvents[0],
 				"progress":  Int2Str(item.ProgressPercentage),
-				"display":   strings.Split(item.DisplayName, "游戏")[0],
+				"display":   strings.Split(item.DisplayName, "，")[0],
 			})
 		}
 	}
@@ -151,12 +159,17 @@ func (c *client) getCList() []map[string]string {
 	if err != nil {
 		return nil
 	}
-	if res.R.StatusCode >= 400 {
+	if res.R.StatusCode >= 500 {
 		log.Fatalln(fmt.Sprintf("Error: %d", res.R.StatusCode))
 		return nil
 	}
 	var challengeListRet challengeListRet
 	res.Json(&challengeListRet)
+	if challengeListRet.Error.Code == 603 {
+		return []map[string]string{
+			{"Code": "603"},
+		}
+	}
 	challengeList := []map[string]string{}
 	for _, item := range challengeListRet.Result.Collection {
 		if item.Prize["category"] == "sweepstake" {
