@@ -1,8 +1,9 @@
 {
 	"accounts": [
 		{
-			"username":"<Email>",
-			"password":"<password>"
+			"username": "<Email>",
+			"password": "<password>"
+			"sessionId": ""
 		}
 	],
 	"lastrun": "0"
