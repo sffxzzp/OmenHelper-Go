@@ -314,10 +314,10 @@ func startData(applicationId string, accountToken string, HpidUserId string) *ba
 	latitude := 30.5832367
 	longitude := 103.982384
 	res, _ := Requests().Get("https://api.bilibili.com/x/web-interface/zone")
-	var zoneRet map[string]interface{}
+	var zoneRet map[string]map[string]float64
 	res.Json(&zoneRet)
-	latitude = zoneRet["data"].(map[string]float64)["latitude"]
-	longitude = zoneRet["data"].(map[string]float64)["longitude"]
+	latitude = zoneRet["data"]["latitude"]
+	longitude = zoneRet["data"]["longitude"]
 	uParams["location"] = map[string]float64{
 		"latitude":  latitude,
 		"longitude": longitude,

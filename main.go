@@ -122,7 +122,7 @@ func loadConfig() Config {
 	cfgFile := Read("config.json")
 	err := json.Unmarshal(cfgFile, &config)
 	if err != nil || (err == nil && len(config.Accounts) == 0) {
-		log.Fatalln("配置文件读取失败！")
+		exit("配置文件读取失败！")
 	}
 	return config
 }
@@ -136,9 +136,13 @@ func writeConfig(config Config) bool {
 	return true
 }
 
-func exit() {
+func exit(err string) {
 	fmt.Println()
-	log.Println("运行完毕！")
+	if err != "" {
+		log.Println(err)
+	} else {
+		log.Println("运行完毕！")
+	}
 	if runtime.GOOS == "windows" {
 		log.Println("请关闭窗口")
 		Input("")
@@ -156,5 +160,5 @@ func main() {
 	if !writeConfig(config) {
 		log.Println("写入配置文件时出错！")
 	}
-	exit()
+	exit("")
 }
