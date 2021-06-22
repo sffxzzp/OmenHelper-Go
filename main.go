@@ -57,12 +57,13 @@ func run(account map[string]string, timestamp string) bool {
 		if len(clientTest) > 0 {
 			for k, v := range clientTest[0] {
 				if k == "Code" && v == "603" {
-					log.Fatalln("Session 无效，重新登录")
+					log.Println("Session 无效，重新登录")
 					localhostUrl := getLocalUrl(account)
 					if localhostUrl != "" {
 						getSessionId(uClient, localhostUrl)
 					}
 					relogin = true
+					break
 				}
 			}
 		}
@@ -88,13 +89,13 @@ func run(account map[string]string, timestamp string) bool {
 		} else if failNum > 0 {
 			log.Println(fmt.Sprintf("%d 个任务加入失败", failNum))
 		} else {
-			log.Fatalln("其他错误")
+			log.Println("其他错误")
 		}
 	}
 	log.Println("获取当前待完成任务列表")
 	currentList := uClient.getCurCList()
 	if currentList == nil {
-		log.Fatalln("失败")
+		log.Println("失败")
 		return false
 	}
 	if len(currentList) == 0 {
@@ -148,12 +149,12 @@ func main() {
 	config := loadConfig()
 	for _, account := range config.Accounts {
 		if !run(account, config.LastRun) {
-			log.Fatalln(fmt.Sprintf("帐号：%s 出现错误", account["username"]))
+			log.Println(fmt.Sprintf("帐号：%s 出现错误", account["username"]))
 		}
 	}
 	config.LastRun = Int2Str(int(time.Now().Unix()))
 	if !writeConfig(config) {
-		log.Fatalln("写入配置文件时出错！")
+		log.Println("写入配置文件时出错！")
 	}
 	exit()
 }

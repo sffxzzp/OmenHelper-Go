@@ -62,13 +62,13 @@ func (l *login) webLogin() string {
 		return ""
 	}
 	if res.R.StatusCode >= 400 {
-		log.Fatalln(fmt.Sprintf("Error: %d", res.R.StatusCode))
+		log.Println(fmt.Sprintf("Error: %d", res.R.StatusCode))
 		return ""
 	}
 	var wlRet wlRet
 	res.Json(&wlRet)
 	if wlRet.Status != "success" {
-		log.Fatalln("登录失败")
+		log.Println("登录失败")
 		return ""
 	}
 	checkRedir := l.Web.Client.CheckRedirect
@@ -78,12 +78,12 @@ func (l *login) webLogin() string {
 	res1, err := l.Web.Get(wlRet.NextUrl)
 	l.Web.Client.CheckRedirect = checkRedir
 	if err != nil {
-		log.Fatalln(err)
+		log.Println(err)
 		return ""
 	}
 	localhostUrl, err := res1.R.Location()
 	if err != nil {
-		log.Fatalln(err)
+		log.Println(err)
 		return ""
 	}
 	return localhostUrl.String()
@@ -100,17 +100,17 @@ func (l *login) idpProvider() bool {
 		return false
 	}
 	if res.R.StatusCode >= 400 {
-		log.Fatalln(fmt.Sprintf("Error: %d", res.R.StatusCode))
+		log.Println(fmt.Sprintf("Error: %d", res.R.StatusCode))
 		return false
 	}
 	var idpRet idpRet
 	res.Json(&idpRet)
 	if idpRet.Error == "captchaRequired" {
-		log.Fatalln("请求过于频繁，需要验证码")
+		log.Println("请求过于频繁，需要验证码")
 		log.Println("请访问 https://myaccount.id.hp.com/uaa 并登录一次后再试")
 	} else {
 		if len(idpRet.Identities) == 0 {
-			log.Fatalln("检查帐号出错！")
+			log.Println("检查帐号出错！")
 		} else if idpRet.Identities[0]["idpProvider"] != "" {
 			log.Println("成功")
 			l.IdpProvider = idpRet.Identities[0]["idpProvider"]
@@ -129,7 +129,7 @@ func (l *login) webPrepare() bool {
 		return false
 	}
 	if res.R.StatusCode >= 400 {
-		log.Fatalln(fmt.Sprintf("Error: %d", res.R.StatusCode))
+		log.Println(fmt.Sprintf("Error: %d", res.R.StatusCode))
 		return false
 	}
 	backendUrl := "https://ui-backend.id.hp.com/bff/v1/auth/session"
@@ -142,7 +142,7 @@ func (l *login) webPrepare() bool {
 		return false
 	}
 	if res.R.StatusCode >= 400 {
-		log.Fatalln(fmt.Sprintf("Error: %d", res.R.StatusCode))
+		log.Println(fmt.Sprintf("Error: %d", res.R.StatusCode))
 		return false
 	}
 	var bRet bRet

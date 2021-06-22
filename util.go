@@ -73,7 +73,7 @@ func formatTime(time time.Time) string {
 
 func genTime(minutes int) []string {
 	cTime := time.Now().UTC()
-	start := cTime.Add(time.Duration(-minutes * int(time.Minute)))
+	start := cTime.Add(time.Duration(int64(-minutes) * int64(time.Minute)))
 	end := cTime
 	return []string{formatTime(start), formatTime(end)}
 }

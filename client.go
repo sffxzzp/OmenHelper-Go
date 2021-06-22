@@ -114,14 +114,14 @@ func (c *client) doTask(currentList []map[string]string) {
 			continue
 		}
 		if res.R.StatusCode >= 400 {
-			log.Fatalln(fmt.Sprintf("Error: %d", res.R.StatusCode))
+			log.Println(fmt.Sprintf("Error: %d", res.R.StatusCode))
 			continue
 		}
 		var progressRet progressRet
 		res.Json(&progressRet)
 		percentage := progressRet.Result[0].ProgressPercentage
 		if percentage == Str2Int(challenge["progress"]) {
-			log.Fatalln("进度没有变化，你设置的时间不合理！")
+			log.Println("进度没有变化，你设置的时间不合理！")
 		} else {
 			log.Println(fmt.Sprintf("事件：%s|进度：%d%%", challenge["display"], percentage))
 		}
@@ -135,7 +135,7 @@ func (c *client) getCurCList() []map[string]string {
 		return nil
 	}
 	if res.R.StatusCode >= 400 {
-		log.Fatalln(fmt.Sprintf("Error: %d", res.R.StatusCode))
+		log.Println(fmt.Sprintf("Error: %d", res.R.StatusCode))
 		return nil
 	}
 	var challengeListRet challengeListRet
@@ -160,7 +160,7 @@ func (c *client) getCList() []map[string]string {
 		return nil
 	}
 	if res.R.StatusCode >= 500 {
-		log.Fatalln(fmt.Sprintf("Error: %d", res.R.StatusCode))
+		log.Println(fmt.Sprintf("Error: %d", res.R.StatusCode))
 		return nil
 	}
 	var challengeListRet challengeListRet
@@ -194,7 +194,7 @@ func (c *client) genSession() bool {
 		return false
 	}
 	if res.R.StatusCode >= 400 {
-		log.Fatalln(fmt.Sprintf("Error: %d", res.R.StatusCode))
+		log.Println(fmt.Sprintf("Error: %d", res.R.StatusCode))
 		return false
 	}
 	var tokenRet tokenRet
@@ -209,7 +209,7 @@ func (c *client) genSession() bool {
 		return false
 	}
 	if res.R.StatusCode >= 400 {
-		log.Fatalln(fmt.Sprintf("Error: %d", res.R.StatusCode))
+		log.Println(fmt.Sprintf("Error: %d", res.R.StatusCode))
 		return false
 	}
 	var handshakeRet commonRet
@@ -227,7 +227,7 @@ func (c *client) genSession() bool {
 		return false
 	}
 	if res.R.StatusCode >= 400 {
-		log.Fatalln(fmt.Sprintf("Error: %d", res.R.StatusCode))
+		log.Println(fmt.Sprintf("Error: %d", res.R.StatusCode))
 		return false
 	}
 	var startRet commonRet
@@ -255,7 +255,7 @@ func (c *client) clientLogin() bool {
 		return false
 	}
 	if res.R.StatusCode >= 400 {
-		log.Fatalln(fmt.Sprintf("Error: %d", res.R.StatusCode))
+		log.Println(fmt.Sprintf("Error: %d", res.R.StatusCode))
 		return false
 	}
 	var cloginRet cloginRet
