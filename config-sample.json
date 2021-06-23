@@ -2,9 +2,9 @@
 	"accounts": [
 		{
 			"username": "<Email>",
-			"password": "<password>"
-			"sessionId": ""
+			"password": "<password>",
+			"sessionId": "",
+			"timestamp": ""
 		}
-	],
-	"lastrun": "0"
+	]
 }

@@ -1,10 +1,8 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"log"
-	"runtime"
 	"time"
 )
 
@@ -40,9 +38,9 @@ func getSessionId(uClient *client, localhostUrl string) bool {
 	return uClient.genSession()
 }
 
-func run(account map[string]string, timestamp string) bool {
+func run(account map[string]string) bool {
 	log.Println("正在运行帐号：" + account["username"])
-	lastRun, lastRunStr := getLastRun(timestamp)
+	lastRun, lastRunStr := getLastRun(account["timestamp"])
 
 	var Client client
 	uClient := Client.newClient()
@@ -113,52 +111,21 @@ func run(account map[string]string, timestamp string) bool {
 			log.Println(fmt.Sprintf("可立即完成的任务数：%d", len(fastList)))
 			uClient.doTask(fastList)
 		}
+		account["timestamp"] = Int2Str(int(time.Now().Unix()))
 	}
 	return true
-}
-
-func loadConfig() Config {
-	var config Config
-	cfgFile := Read("config.json")
-	err := json.Unmarshal(cfgFile, &config)
-	if err != nil || (err == nil && len(config.Accounts) == 0) {
-		exit("配置文件读取失败！")
-	}
-	return config
-}
-
-func writeConfig(config Config) bool {
-	cfgData, err := json.Marshal(config)
-	if err != nil {
-		return false
-	}
-	Write("config.json", string(cfgData))
-	return true
-}
-
-func exit(err string) {
-	fmt.Println()
-	if err != "" {
-		log.Println(err)
-	} else {
-		log.Println("运行完毕！")
-	}
-	if runtime.GOOS == "windows" {
-		log.Println("请关闭窗口")
-		Input("")
-	}
 }
 
 func main() {
 	config := loadConfig()
 	for _, account := range config.Accounts {
-		if !run(account, config.LastRun) {
+		if !run(account) {
 			log.Println(fmt.Sprintf("帐号：%s 出现错误", account["username"]))
 		}
 	}
-	config.LastRun = Int2Str(int(time.Now().Unix()))
 	if !writeConfig(config) {
 		log.Println("写入配置文件时出错！")
 	}
-	exit("")
+	fmt.Println()
+	logErr("")
 }

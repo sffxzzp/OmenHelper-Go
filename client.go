@@ -135,7 +135,7 @@ func (c *client) getCurCList() []map[string]string {
 		return nil
 	}
 	if res.R.StatusCode >= 400 {
-		exit(fmt.Sprintf("Error: %d", res.R.StatusCode))
+		logErr(fmt.Sprintf("Error: %d", res.R.StatusCode))
 		return nil
 	}
 	var challengeListRet challengeListRet
@@ -160,7 +160,7 @@ func (c *client) getCList() []map[string]string {
 		return nil
 	}
 	if res.R.StatusCode >= 500 {
-		exit(fmt.Sprintf("Error: %d", res.R.StatusCode))
+		logErr(fmt.Sprintf("Error: %d", res.R.StatusCode))
 		return nil
 	}
 	var challengeListRet challengeListRet
@@ -194,7 +194,7 @@ func (c *client) genSession() bool {
 		return false
 	}
 	if res.R.StatusCode >= 400 {
-		exit(fmt.Sprintf("Error: %d", res.R.StatusCode))
+		logErr(fmt.Sprintf("Error: %d", res.R.StatusCode))
 		return false
 	}
 	var tokenRet tokenRet
@@ -209,7 +209,7 @@ func (c *client) genSession() bool {
 		return false
 	}
 	if res.R.StatusCode >= 400 {
-		exit(fmt.Sprintf("Error: %d", res.R.StatusCode))
+		logErr(fmt.Sprintf("Error: %d", res.R.StatusCode))
 		return false
 	}
 	var handshakeRet commonRet
@@ -227,7 +227,7 @@ func (c *client) genSession() bool {
 		return false
 	}
 	if res.R.StatusCode >= 400 {
-		exit(fmt.Sprintf("Error: %d", res.R.StatusCode))
+		logErr(fmt.Sprintf("Error: %d", res.R.StatusCode))
 		return false
 	}
 	var startRet commonRet
@@ -255,7 +255,7 @@ func (c *client) clientLogin() bool {
 		return false
 	}
 	if res.R.StatusCode >= 400 {
-		exit(fmt.Sprintf("Error: %d", res.R.StatusCode))
+		logErr(fmt.Sprintf("Error: %d", res.R.StatusCode))
 		return false
 	}
 	var cloginRet cloginRet
