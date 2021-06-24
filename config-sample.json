@@ -1,10 +1,7 @@
-{
-	"accounts": [
-		{
-			"username": "<Email>",
-			"password": "<password>",
-			"sessionId": "",
-			"timestamp": ""
-		}
-	]
-}
+[
+	{
+		"username": "<Email>",
+		"password": "<password>",
+		"sessionId": ""
+	}
+]

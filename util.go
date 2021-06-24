@@ -11,17 +11,6 @@ import (
 	"time"
 )
 
-func getLastRun(timestamp string) (int, string) {
-	var lastRun int
-	if timestamp == "" {
-		lastRun = int(time.Now().Unix())
-	} else {
-		lastRun = Str2Int(timestamp)
-	}
-	lastRunStr := time.Unix(int64(lastRun), 0).Format("2006/01/02 15:04:05")
-	return lastRun, lastRunStr
-}
-
 func hex2int(hexStr string) uint64 {
 	n, err := strconv.ParseUint(hexStr, 16, 64)
 	if err != nil {

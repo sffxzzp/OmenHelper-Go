@@ -3,14 +3,6 @@ package main
 import (
 	"fmt"
 	"log"
-	"time"
-)
-
-type (
-	Config struct {
-		Accounts []map[string]string `json:"accounts"`
-		LastRun  string              `json:"lastrun"`
-	}
 )
 
 func getLocalUrl(account map[string]string) string {
@@ -40,7 +32,6 @@ func getSessionId(uClient *client, localhostUrl string) bool {
 
 func run(account map[string]string) bool {
 	log.Println("正在运行帐号：" + account["username"])
-	lastRun, lastRunStr := getLastRun(account["timestamp"])
 
 	var Client client
 	uClient := Client.newClient()
@@ -99,9 +90,7 @@ func run(account map[string]string) bool {
 	if len(currentList) == 0 {
 		log.Println("无可完成的任务")
 	} else {
-		log.Println(fmt.Sprintf("上次运行时间：%s", lastRunStr))
-		currentRun := int(time.Now().Unix())
-		if currentRun-lastRun > 3000 && len(challengeList) == 0 {
+		if len(challengeList) == 0 {
 			log.Println("慢速模式，尝试完成所有任务")
 			log.Println(fmt.Sprintf("待完成的任务数：%d", len(currentList)))
 			uClient.doTask(currentList)
@@ -111,19 +100,18 @@ func run(account map[string]string) bool {
 			log.Println(fmt.Sprintf("可立即完成的任务数：%d", len(fastList)))
 			uClient.doTask(fastList)
 		}
-		account["timestamp"] = Int2Str(int(time.Now().Unix()))
 	}
 	return true
 }
 
 func main() {
-	config := loadConfig()
-	for _, account := range config.Accounts {
+	accounts := loadConfig()
+	for _, account := range accounts {
 		if !run(account) {
 			log.Println(fmt.Sprintf("帐号：%s 出现错误", account["username"]))
 		}
 	}
-	if !writeConfig(config) {
+	if !writeConfig(accounts) {
 		log.Println("写入配置文件时出错！")
 	}
 	fmt.Println()

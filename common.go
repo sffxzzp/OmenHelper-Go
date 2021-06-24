@@ -39,17 +39,17 @@ func Str2Int(s string) int {
 	return num
 }
 
-func loadConfig() Config {
-	var config Config
+func loadConfig() []map[string]string {
+	var config []map[string]string
 	cfgFile := Read("config.json")
 	err := json.Unmarshal(cfgFile, &config)
-	if err != nil || (err == nil && len(config.Accounts) == 0) {
+	if err != nil || (err == nil && len(config) == 0) {
 		logErr("配置文件读取失败！")
 	}
 	return config
 }
 
-func writeConfig(config Config) bool {
+func writeConfig(config []map[string]string) bool {
 	cfgData, err := json.Marshal(config)
 	if err != nil {
 		return false
