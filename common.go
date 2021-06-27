@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"runtime"
 	"strconv"
 )
 
@@ -63,5 +64,12 @@ func logErr(err string) {
 		log.Println(err)
 	} else {
 		log.Println("运行完毕！")
+	}
+}
+
+func exit() {
+	logErr("")
+	if runtime.GOOS == "windows" {
+		Input("")
 	}
 }

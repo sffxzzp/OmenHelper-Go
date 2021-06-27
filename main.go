@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"time"
 )
 
 func getLocalUrl(account map[string]string) string {
@@ -50,6 +51,8 @@ func run(account map[string]string) bool {
 					localhostUrl := getLocalUrl(account)
 					if localhostUrl != "" {
 						getSessionId(uClient, localhostUrl)
+					} else {
+						return false
 					}
 					relogin = true
 					break
@@ -60,6 +63,8 @@ func run(account map[string]string) bool {
 		localhostUrl := getLocalUrl(account)
 		if localhostUrl != "" {
 			getSessionId(uClient, localhostUrl)
+		} else {
+			return false
 		}
 		relogin = true
 	}
@@ -71,12 +76,12 @@ func run(account map[string]string) bool {
 		challengeList = clientTest
 	}
 	if len(challengeList) > 0 {
-		log.Println(fmt.Sprintf("正在加入 %d 个任务", len(challengeList)))
+		log.Printf("正在加入 %d 个任务\n", len(challengeList))
 		failNum := uClient.joinChallenges(challengeList)
 		if failNum == 0 {
 			log.Println("任务加入完毕")
 		} else if failNum > 0 {
-			log.Println(fmt.Sprintf("%d 个任务加入失败", failNum))
+			log.Printf("%d 个任务加入失败\n", failNum)
 		} else {
 			log.Println("其他错误")
 		}
@@ -92,12 +97,12 @@ func run(account map[string]string) bool {
 	} else {
 		if len(challengeList) == 0 {
 			log.Println("慢速模式，尝试完成所有任务")
-			log.Println(fmt.Sprintf("待完成的任务数：%d", len(currentList)))
+			log.Printf("待完成的任务数：%d\n", len(currentList))
 			uClient.doTask(currentList)
 		} else {
 			log.Println("快速模式，尝试完成可立即完成的任务")
 			fastList := uClient.getFastList(currentList)
-			log.Println(fmt.Sprintf("可立即完成的任务数：%d", len(fastList)))
+			log.Printf("可立即完成的任务数：%d\n", len(fastList))
 			uClient.doTask(fastList)
 		}
 	}
@@ -107,13 +112,19 @@ func run(account map[string]string) bool {
 func main() {
 	accounts := loadConfig()
 	for _, account := range accounts {
-		if !run(account) {
-			log.Println(fmt.Sprintf("帐号：%s 出现错误", account["username"]))
+		retries := 3
+		for retries > 0 {
+			if run(account) {
+				break
+			}
+			log.Printf("帐号：%s 出现错误，即将重试\n\n", account["username"])
+			retries -= 1
+			time.Sleep(3 * time.Second)
 		}
 	}
 	if !writeConfig(accounts) {
 		log.Println("写入配置文件时出错！")
 	}
 	fmt.Println()
-	logErr("")
+	exit()
 }

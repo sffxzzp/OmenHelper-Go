@@ -114,8 +114,8 @@ func (l *login) idpProvider() bool {
 		} else if idpRet.Identities[0]["idpProvider"] != "" {
 			log.Println("成功")
 			l.IdpProvider = idpRet.Identities[0]["idpProvider"]
-			log.Println(fmt.Sprintf("ID 类型：%s", l.IdpProvider))
-			log.Println(fmt.Sprintf("区域：%s", idpRet.Identities[0]["locale"]))
+			log.Printf("ID 类型：%s\n", l.IdpProvider)
+			log.Printf("区域：%s\n", idpRet.Identities[0]["locale"])
 			return true
 		}
 	}

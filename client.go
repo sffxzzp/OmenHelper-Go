@@ -100,7 +100,7 @@ func (c *client) joinChallenges(challengeList []map[string]string) int {
 
 func (c *client) doTask(currentList []map[string]string) {
 	for _, challenge := range currentList {
-		log.Println(fmt.Sprintf("当前执行：%s - %s%%", challenge["display"], challenge["progress"]))
+		log.Printf("当前执行：%s - %s%%\n", challenge["display"], challenge["progress"])
 		time := 45
 		if challenge["eventName"][:6] == "Launch" {
 			time = 1
@@ -114,7 +114,7 @@ func (c *client) doTask(currentList []map[string]string) {
 			continue
 		}
 		if res.R.StatusCode >= 400 {
-			log.Println(fmt.Sprintf("Error: %d", res.R.StatusCode))
+			log.Printf("Error: %d\n", res.R.StatusCode)
 			continue
 		}
 		var progressRet progressRet
@@ -123,7 +123,7 @@ func (c *client) doTask(currentList []map[string]string) {
 		if percentage == Str2Int(challenge["progress"]) {
 			log.Println("进度没有变化，你设置的时间不合理！")
 		} else {
-			log.Println(fmt.Sprintf("事件：%s|进度：%d%%", challenge["display"], percentage))
+			log.Printf("事件：%s|进度：%d%%\n", challenge["display"], percentage)
 		}
 	}
 }
