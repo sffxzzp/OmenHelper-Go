@@ -99,7 +99,7 @@ func (l *login) idpProvider() bool {
 	if err != nil {
 		return false
 	}
-	if res.R.StatusCode >= 400 {
+	if res.R.StatusCode > 404 {
 		logErr(fmt.Sprintf("Error: %d", res.R.StatusCode))
 		return false
 	}
