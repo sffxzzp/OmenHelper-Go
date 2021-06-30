@@ -115,6 +115,7 @@ func main() {
 		retries := 3
 		for retries > 0 {
 			if run(account) {
+				time.Sleep(5 * time.Second)
 				break
 			}
 			log.Printf("帐号：%s 出现错误，即将重试\n\n", account["username"])
