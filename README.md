@@ -4,4 +4,4 @@
 
 请求都是从上面的 repo 抄的，处理逻辑上稍稍按自己的使用习惯改了一下，巨量 Bug 警告。
 
-安卓的话可以用 Termux，不过需要先安装 proot，运行程序前需先执行 termux-chroot。（我不知道到底是不是真的要 root 权限
+安卓的话可以用 Termux，不过需要先安装 proot，运行程序前需先执行 termux-chroot。（无需 root

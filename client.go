@@ -119,12 +119,13 @@ func (c *client) doTask(currentList []map[string]string) {
 		}
 		var progressRet progressRet
 		res.Json(&progressRet)
-		percentage := progressRet.Result[0].ProgressPercentage
-		if percentage == Str2Int(challenge["progress"]) {
-			log.Println("进度没有变化，你设置的时间不合理！")
+		var percentage int
+		if len(progressRet.Result) > 0 {
+			percentage = progressRet.Result[0].ProgressPercentage
 		} else {
-			log.Printf("事件：%s|进度：%d%%\n", challenge["display"], percentage)
+			percentage = 0
 		}
+		log.Printf("事件：%s|进度：%d%%\n", challenge["display"], percentage)
 	}
 }
 
